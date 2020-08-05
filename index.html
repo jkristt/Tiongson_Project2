@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CHICAGO</title>
+
+<link href="style.css" rel="stylesheet" type="text/css"
+
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@900&display=swap" rel="stylesheet">
+
+ <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+ <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+<script src="js/leaflet-providers.js"></script>
+
+<script src="js/vendor/modernizr-2.8.3-respond-1.4.2.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"></script
+
+</head>
+
+<header> </header>
+
+<body> 
+
+	<div class = "intro">
+	<h1> Income Inequality in Chicago </h1>
+	<h2> __________________________________________ </h2>
+	<h3> Mapping per capita income in Chicago's 77 community areas </h3>
+	</div>
+
+	<div class ="paragraph">
+	<p>
+		The gap between the rich and the poor has never been as wide as it is today. In Chicago, these disparities are very noticeable geographically with high-income residents concentrated in the loop and many community areas north of the loop. Low-income residents, on the other hand, are mostly concentrated in the south and west sides of the City.
+	</p>
+	</div>
+
+<div id = "map"> </div>
+
+<script>
+
+var myMap = L.map('map').setView([41.848422, -87.675247], 11);
+
+var CartoDB_DarkMatterNoLabels = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+}).addTo(myMap);
+
+$.getJSON("ChicagoHardshipIndex.geojson", function(data){
+	L.geoJson(data, {
+		style: function(feature) {
+			var conditionalColor,
+			income = feature.properties.PCI;
+				if ( income > 50000) conditionalColor = "#016c59";
+				else if ( income > 30000) conditionalColor = "#1c9099";
+				else if ( income > 20000) conditionalColor = "#67a9cf";
+				else if (income > 0) conditionalColor = "#a6bddb";
+				else conditionalColor = "#d0d1e6";
+				return { color: "#f6eff7",
+							weight: 0.5,
+							fillColor: conditionalColor,
+							fillOpacity: 0.9 };
+				},
+				onEachFeature: function( feature, layer ){
+					layer.bindPopup( "Community Area: " + feature.properties.CA + "<br/>" + "Per Capita Income: " + feature.properties.PCI)
+				}
+						} ).addTo(myMap);
+				});
+
+
+</script>
+
+</body>
+
+</html>
+
+
+
+
+
+
